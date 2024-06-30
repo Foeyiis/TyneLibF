@@ -31,7 +31,7 @@ public class Profiles implements Listener {
         noprofileform.addButton(new Button("Create a new profile")
                 .setImage(ImageType.URL, "https://cdn-icons-png.freepik.com/128/11607/11607148.png")
                 .onClick(((player, button) -> {
-                    createform.send(player);
+                    createForm(player).send(player);
                 }))
         );
         noprofileform.setNoneHandler(player -> {
@@ -106,8 +106,12 @@ public class Profiles implements Listener {
         Player player = event.getPlayer();
         PlayerDatabase pd = TyneLibF.getPlayerDatabase();
 
-        if (player.getFirstPlayed() == null) {
-
+        try {
+            if (pd.getProfileUUID(player) == null) {
+                noProfileForm().send(player);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

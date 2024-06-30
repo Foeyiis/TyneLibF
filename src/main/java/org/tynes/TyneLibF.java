@@ -3,6 +3,7 @@ package org.tynes;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.plugin.PluginManager;
 import org.tynes.database.PlayerDatabase;
+import org.tynes.profiles.Profiles;
 import org.tynes.reputations.Reputations;
 import org.tynes.reputations.Villages;
 
@@ -16,20 +17,6 @@ public class TyneLibF extends PluginBase {
     private static PlayerDatabase playerDatabase;
 
     @Override
-    public void onLoad() {
-        // Called once the plugin is LOADED.
-        // The point during startup that the plugin is loaded is
-        // based on the setting of the load key in the plugin.yml
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     public void onEnable() {
         // Called when plugin is enabled. This is called after all plugins have been LOADED
         // If your plugin has public API that could be accessed by other plugins, you will want to
@@ -40,12 +27,16 @@ public class TyneLibF extends PluginBase {
 
         saveDefaultConfig();
 
+        File db = new File(getDataFolder(), "player.db");
+        File profileDb = new File(getDataFolder() + "\\database", "\\profiles.db");
+
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+        if (!(new File(getDataFolder() + "\\database")).exists()) {
+            new File(getDataFolder() + "\\database").mkdirs();
+        }
 
-        File db = new File(getDataFolder(), "player.db");
-        File profileDb = new File(getDataFolder() + "\\database", "\\profiles.db");
         try {
             boolean db_success = db.exists() ? true :
                     db.createNewFile();
@@ -69,6 +60,8 @@ public class TyneLibF extends PluginBase {
 
         pm.registerEvents(new Villages(), this);
         pm.registerEvents(new Reputations(), this);
+
+        pm.registerEvents(new Profiles(), this);
 
         loadTimes = System.currentTimeMillis() - loadTimes;
         getLogger().info("§aPlugin loaded within " + loadTimes + "ms");

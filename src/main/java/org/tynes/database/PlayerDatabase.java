@@ -1,6 +1,7 @@
 package org.tynes.database;
 
 import cn.nukkit.Player;
+import org.tynes.TyneLibF;
 import org.tynes.profiles.ProfileMode;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
@@ -12,6 +13,11 @@ public class PlayerDatabase {
     private final Connection profilesConnection;
 
     public PlayerDatabase(String path, String profileConnectionPath) throws SQLException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Failed to load SQLite JDBC class", e);
+        }
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         profilesConnection = DriverManager.getConnection("jdbc:sqlite:" + profileConnectionPath);
         try (Statement statement = connection.createStatement()) {
@@ -30,6 +36,7 @@ public class PlayerDatabase {
                     "inventorydata TEXT DEFAULT NULL," +
                     "explevel INTEGER DEFAULT 0)");
         }
+        TyneLibF.getInstance().getLogger().info("§aAll SQLite Database Connected Properly.");
     }
 
     public void closeConnection() throws SQLException {
