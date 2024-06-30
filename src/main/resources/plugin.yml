@@ -1,0 +1,12 @@
+name: TyneLibF
+main: org.tynes.TyneLibF
+version: '1.0'
+api: [ "2.0.0" ]
+authors:
+  - Foeyii
+  - Neutroonate
+prefix: 'TyneLibraryF'
+libraries:
+  - org.xerial:sqlite-jdbc:3.42.0.0
+depend:
+  - FormConstructor
